@@ -57,12 +57,21 @@ export default function SignupForm() {
     handleSubmit,
     formState: { errors },
     watch,
+    getValues,
+    setValue
   } = form;
 
   const watchPassword = watch("password");
 
   const onSubmit = (data: SignupFormType) => {
-    console.log(data);
+    console.log('Submit: ',data);
+  };
+
+  const handleGetValue = () => {
+   console.log("Get Value: ",getValues('username')) 
+  };
+  const handleSetValue = () => {
+   console.log("Get Value: ",setValue('username','ali')) 
   };
 
   renderCount++;
@@ -71,7 +80,7 @@ export default function SignupForm() {
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-0.5 border-b border-gray-200 pb-4 mb-4">
         <h2 className="text-2xl font-bold tracking-tight">
-          Sign Up {renderCount/2}{" "}
+          Sign Up {renderCount / 2}{" "}
         </h2>
         <p className="text-muted-foreground">
           Please fill out the form below to sign up.
@@ -248,6 +257,8 @@ export default function SignupForm() {
       </div>
 
       <Button type="submit">Sign Up</Button>
+      <Button onClick={handleGetValue} type='button' className="ml-4">Get Value</Button>
+      <Button onClick={handleSetValue} type='button' className="ml-4">Set Value</Button>
       <DevTool control={control} />
     </form>
   );
