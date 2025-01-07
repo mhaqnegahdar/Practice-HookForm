@@ -71,7 +71,7 @@ export default function SignupForm() {
    console.log("Get Value: ",getValues('username')) 
   };
   const handleSetValue = () => {
-   console.log("Get Value: ",setValue('username','ali')) 
+   console.log("Get Value: ",setValue('username','ali',{shouldDirty: true,shouldTouch: true,shouldValidate: true})) 
   };
 
   renderCount++;
