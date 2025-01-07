@@ -15,7 +15,17 @@ export default function SignupForm() {
     password: string;
   };
 
-  const form = useForm<SignupFormType>();
+  const form = useForm<SignupFormType>({
+    defaultValues: async ()=> {
+
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
+      return {
+        username: "mhaqnegahdar",
+        email: "",
+        password: "",
+      };
+    }
+  });
 
   const {
     register,
