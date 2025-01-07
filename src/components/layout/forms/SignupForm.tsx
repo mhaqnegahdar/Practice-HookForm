@@ -19,6 +19,8 @@ export default function SignupForm() {
       facebook: string;
     };
     phoneNumbers: { number: string }[];
+    age: number;
+    date: Date;
   };
 
   const form = useForm<SignupFormType>({
@@ -33,6 +35,8 @@ export default function SignupForm() {
           facebook: "",
         },
         phoneNumbers: [{ number: "" }],
+        age: 0,
+        date: new Date(),
       };
     },
   });
@@ -191,6 +195,44 @@ export default function SignupForm() {
           </small>
         </div>
       ))}
+
+      <div>
+        <label
+          htmlFor="age"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Age
+        </label>
+        <input
+          type="number"
+          id="age"
+          {...register("age", {
+            valueAsNumber: true,
+            required: "Age is required",
+          })}
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+        />
+        <small className="text-rose-500">{errors.age?.message}</small>
+      </div>
+
+      <div>
+        <label
+          htmlFor="date"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Date
+        </label>
+        <input
+          type="date"
+          id="date"
+          {...register("date", {
+            valueAsDate: true,
+            required: "Date is required",
+          })}
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+        />
+        <small className="text-rose-500">{errors.date?.message}</small>
+      </div>
 
       <Button type="submit">Sign Up</Button>
       <DevTool control={control} />
