@@ -13,18 +13,27 @@ export default function SignupForm() {
     username: string;
     email: string;
     password: string;
+    socialMedia: {
+      twitter: string;
+      facebook: string;
+    };
+    phoneNumbers: string[];
   };
 
   const form = useForm<SignupFormType>({
-    defaultValues: async ()=> {
-
+    defaultValues: async () => {
       // await new Promise((resolve) => setTimeout(resolve, 3000));
       return {
         username: "mhaqnegahdar",
         email: "",
         password: "",
+        socialMedia: {
+          twitter: "",
+          facebook: "",
+        },
+        phoneNumbers: ["", ""],
       };
-    }
+    },
   });
 
   const {
@@ -96,6 +105,71 @@ export default function SignupForm() {
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
         />
         <small className="text-rose-500">{errors.password?.message}</small>
+      </div>
+      <div>
+        <label
+          htmlFor="twitter"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Twitter
+        </label>
+        <input
+          type="text"
+          id="twitter"
+          {...register("socialMedia.twitter")}
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="facebook"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Facebook
+        </label>
+        <input
+          type="text"
+          id="facebook"
+          {...register("socialMedia.facebook")}
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="phoneNumber"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Primary Phone Number
+        </label>
+        <input
+          type="text"
+          id="phoneNumber"
+          {...register("phoneNumbers.0", {
+            required: "Phone number is required",
+            pattern: {
+              value: /^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$/,
+              message: "Invalid phone number",
+            },
+          })}
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+        />
+        <small className="text-rose-500">
+          {errors.phoneNumbers?.[0]?.message}
+        </small>
+      </div>
+      <div>
+        <label
+          htmlFor="phoneNumber"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Secondary Phone Number
+        </label>
+        <input
+          type="text"
+          id="phoneNumber"
+          {...register("phoneNumbers.1")}
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+        />
       </div>
       <Button type="submit">Sign Up</Button>
       <DevTool control={control} />
