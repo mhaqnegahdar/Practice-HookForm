@@ -1,7 +1,18 @@
-import { Button } from "@/components/ui/button";
+"use client";
+
+//Hooks / Packages
 import React from "react";
+import { useForm } from "react-hook-form";
+
+// Components
+import { Button } from "@/components/ui/button";
+import { DevTool } from "@hookform/devtools";
 
 export default function SignupForm() {
+  const form = useForm();
+
+  const { register, control } = form;
+
   return (
     <form className="space-y-4">
       <div className="space-y-0.5 border-b border-gray-200 pb-4 mb-4">
@@ -20,7 +31,7 @@ export default function SignupForm() {
         <input
           type="text"
           id="username"
-          name="username"
+          {...register("username")}
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
         />
       </div>
@@ -34,7 +45,7 @@ export default function SignupForm() {
         <input
           type="email"
           id="email"
-          name="email"
+          {...register("email")}
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
         />
       </div>
@@ -48,11 +59,12 @@ export default function SignupForm() {
         <input
           type="password"
           id="password"
-          name="password"
+          {...register("password")}
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
         />
       </div>
       <Button type="submit">Sign Up</Button>
+      <DevTool control={control} />
     </form>
   );
 }
