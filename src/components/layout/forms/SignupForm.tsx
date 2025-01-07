@@ -17,7 +17,12 @@ export default function SignupForm() {
 
   const form = useForm<SignupFormType>();
 
-  const { register, control, handleSubmit } = form;
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = form;
 
   const onSubmit = (data: SignupFormType) => {
     console.log(data);
@@ -41,9 +46,10 @@ export default function SignupForm() {
         <input
           type="text"
           id="username"
-          {...register("username")}
+          {...register("username", { required: "Username is required" })}
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
         />
+        <small className="text-rose-500">{errors.username?.message}</small>
       </div>
       <div>
         <label
@@ -55,9 +61,16 @@ export default function SignupForm() {
         <input
           type="email"
           id="email"
-          {...register("email")}
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: "Invalid email address",
+            },
+          })}
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
         />
+        <small className="text-rose-500">{errors.email?.message}</small>
       </div>
       <div>
         <label
@@ -69,9 +82,10 @@ export default function SignupForm() {
         <input
           type="password"
           id="password"
-          {...register("password")}
+          {...register("password", { required: "Password is required" })}
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
         />
+        <small className="text-rose-500">{errors.password?.message}</small>
       </div>
       <Button type="submit">Sign Up</Button>
       <DevTool control={control} />
