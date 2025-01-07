@@ -2,11 +2,12 @@
 
 //Hooks / Packages
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
 // Components
 import { Button } from "@/components/ui/button";
 import { DevTool } from "@hookform/devtools";
+import { PlusCircle, TrashIcon } from "lucide-react";
 
 export default function SignupForm() {
   type SignupFormType = {
@@ -17,7 +18,7 @@ export default function SignupForm() {
       twitter: string;
       facebook: string;
     };
-    phoneNumbers: string[];
+    phoneNumbers: { number: string }[];
   };
 
   const form = useForm<SignupFormType>({
@@ -31,9 +32,14 @@ export default function SignupForm() {
           twitter: "",
           facebook: "",
         },
-        phoneNumbers: ["", ""],
+        phoneNumbers: [{ number: "" }],
       };
     },
+  });
+
+  const phoneNumberArray = useFieldArray({
+    control: form.control,
+    name: "phoneNumbers",
   });
 
   const {
@@ -134,43 +140,58 @@ export default function SignupForm() {
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
         />
       </div>
-      <div>
-        <label
-          htmlFor="phoneNumber"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Primary Phone Number
-        </label>
-        <input
-          type="text"
-          id="phoneNumber"
-          {...register("phoneNumbers.0", {
-            required: "Phone number is required",
-            pattern: {
-              value: /^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$/,
-              message: "Invalid phone number",
-            },
-          })}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
-        />
-        <small className="text-rose-500">
-          {errors.phoneNumbers?.[0]?.message}
-        </small>
-      </div>
-      <div>
-        <label
-          htmlFor="phoneNumber"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Secondary Phone Number
-        </label>
-        <input
-          type="text"
-          id="phoneNumber"
-          {...register("phoneNumbers.1")}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
-        />
-      </div>
+      {phoneNumberArray.fields.map((field, index) => (
+        <div key={field.id}>
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor={`phoneNumbers-${index}`}
+              className="block text-sm font-medium text-gray-700"
+            >
+              {index === 0 ? "Primary " : "Secondary "} Phone Number
+            </label>
+            {index === 0 ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => phoneNumberArray.append({ number: "" })}
+                className="mt-4"
+              >
+                <PlusCircle />
+              </Button>
+            ) : null}
+          </div>
+          <div className="flex items-center justify-between">
+            <input
+              type="text"
+              id={`phoneNumbers-${index}`}
+              {...register(`phoneNumbers.${index}.number`, {
+                required: "Phone number is required",
+                pattern: {
+                  value: /^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$/,
+                  message: "Invalid phone number",
+                },
+              })}
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+            />
+            {index !== 0 ? (
+              <Button
+                type="button"
+                variant="link"
+                size="sm"
+                onClick={() => phoneNumberArray.remove(index)}
+                className="text-rose-800 hover:bg-rose-800 hover:text-white ml-4"
+              >
+                <TrashIcon />
+              </Button>
+            ) : null}
+          </div>
+          <small className="text-rose-500">
+            {errors.phoneNumbers?.[index]?.number?.message}
+          </small>
+        </div>
+      ))}
+
       <Button type="submit">Sign Up</Button>
       <DevTool control={control} />
     </form>
