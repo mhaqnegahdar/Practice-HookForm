@@ -9,12 +9,22 @@ import { Button } from "@/components/ui/button";
 import { DevTool } from "@hookform/devtools";
 
 export default function SignupForm() {
-  const form = useForm();
+  type SignupFormType = {
+    username: string;
+    email: string;
+    password: string;
+  };
 
-  const { register, control } = form;
+  const form = useForm<SignupFormType>();
+
+  const { register, control, handleSubmit } = form;
+
+  const onSubmit = (data: SignupFormType) => {
+    console.log(data);
+  };
 
   return (
-    <form className="space-y-4">
+    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-0.5 border-b border-gray-200 pb-4 mb-4">
         <h2 className="text-2xl font-bold tracking-tight">Sign Up </h2>
         <p className="text-muted-foreground">
