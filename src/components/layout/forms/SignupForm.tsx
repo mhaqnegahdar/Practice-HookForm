@@ -9,7 +9,10 @@ import { Button } from "@/components/ui/button";
 import { DevTool } from "@hookform/devtools";
 import { PlusCircle, TrashIcon } from "lucide-react";
 
+let renderCount = 0;
+
 export default function SignupForm() {
+  // Value Type
   type SignupFormType = {
     username: string;
     email: string;
@@ -23,6 +26,7 @@ export default function SignupForm() {
     date: Date;
   };
 
+  // Form
   const form = useForm<SignupFormType>({
     defaultValues: async () => {
       // await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -41,6 +45,7 @@ export default function SignupForm() {
     },
   });
 
+  // Dynamic Field
   const phoneNumberArray = useFieldArray({
     control: form.control,
     name: "phoneNumbers",
@@ -51,19 +56,27 @@ export default function SignupForm() {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = form;
+
+  const watchPassword = watch("password");
 
   const onSubmit = (data: SignupFormType) => {
     console.log(data);
   };
 
+  renderCount++;
+
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-0.5 border-b border-gray-200 pb-4 mb-4">
-        <h2 className="text-2xl font-bold tracking-tight">Sign Up </h2>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Sign Up {renderCount/2}{" "}
+        </h2>
         <p className="text-muted-foreground">
           Please fill out the form below to sign up.
         </p>
+        <p className="text-muted-foreground">Password : {watchPassword}</p>
       </div>
       <div>
         <label
