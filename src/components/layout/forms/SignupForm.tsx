@@ -58,20 +58,27 @@ export default function SignupForm() {
     formState: { errors },
     watch,
     getValues,
-    setValue
+    setValue,
   } = form;
 
   const watchPassword = watch("password");
 
   const onSubmit = (data: SignupFormType) => {
-    console.log('Submit: ',data);
+    console.log("Submit: ", data);
   };
 
   const handleGetValue = () => {
-   console.log("Get Value: ",getValues('username')) 
+    console.log("Get Value: ", getValues("username"));
   };
   const handleSetValue = () => {
-   console.log("Get Value: ",setValue('username','ali',{shouldDirty: true,shouldTouch: true,shouldValidate: true})) 
+    console.log(
+      "Get Value: ",
+      setValue("username", "ali", {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      })
+    );
   };
 
   renderCount++;
@@ -257,8 +264,12 @@ export default function SignupForm() {
       </div>
 
       <Button type="submit">Sign Up</Button>
-      <Button onClick={handleGetValue} type='button' className="ml-4">Get Value</Button>
-      <Button onClick={handleSetValue} type='button' className="ml-4">Set Value</Button>
+      <Button onClick={handleGetValue} type="button" className="ml-4">
+        Get Value
+      </Button>
+      <Button onClick={handleSetValue} type="button" className="ml-4">
+        Set Value
+      </Button>
       <DevTool control={control} />
     </form>
   );
