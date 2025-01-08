@@ -1,7 +1,7 @@
 "use client";
 
 //Hooks / Packages
-import React from "react";
+import React, { useEffect } from "react";
 import { FieldErrors, useFieldArray, useForm } from "react-hook-form";
 
 // Components
@@ -55,10 +55,19 @@ export default function SignupForm() {
     register,
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting, isLoading, isDirty },
+    formState: {
+      errors,
+      isValid,
+      isSubmitting,
+      isLoading,
+      isDirty,
+      isSubmitSuccessful,
+    },
     watch,
     getValues,
     setValue,
+
+    reset,
   } = form;
 
   const watchPassword = watch("password");
@@ -85,6 +94,13 @@ export default function SignupForm() {
   };
 
   renderCount++;
+
+  // On Successful Submit Reset
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit, onError)}>
@@ -266,18 +282,29 @@ export default function SignupForm() {
         <small className="text-rose-500">{errors.date?.message}</small>
       </div>
 
-      <Button
-        type="submit"
-        disabled={!isDirty || !isValid || isLoading || isSubmitting}
-      >
-        Sign Up
-      </Button>
-      <Button onClick={handleGetValue} type="button" className="ml-4">
-        Get Value
-      </Button>
-      <Button onClick={handleSetValue} type="button" className="ml-4">
-        Set Value
-      </Button>
+      <div className="space-x-4 w-full flex ">
+        <Button type="submit" disabled={!isDirty || isLoading || isSubmitting}>
+          Sign Up
+        </Button>
+        <Button type="reset" title="Type Reset">
+          Empty All
+        </Button>
+        <Button
+          type="button"
+          onClick={() => {
+            reset();
+          }}
+          title="Reset Function"
+        >
+          Reset
+        </Button>
+        <Button onClick={handleGetValue} type="button">
+          Get Value
+        </Button>
+        <Button onClick={handleSetValue} type="button">
+          Set Value
+        </Button>
+      </div>
       <DevTool control={control} />
     </form>
   );
