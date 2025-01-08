@@ -55,7 +55,7 @@ export default function SignupForm() {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid, isSubmitting, isLoading, isDirty },
     watch,
     getValues,
     setValue,
@@ -66,7 +66,7 @@ export default function SignupForm() {
   const onSubmit = (data: SignupFormType) => {
     console.log("Submit: ", data);
   };
-  const onError = (error:FieldErrors<SignupFormType>) => {
+  const onError = (error: FieldErrors<SignupFormType>) => {
     console.log("Erros: ", error);
   };
 
@@ -87,7 +87,7 @@ export default function SignupForm() {
   renderCount++;
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit,onError)}>
+    <form className="space-y-4" onSubmit={handleSubmit(onSubmit, onError)}>
       <div className="space-y-0.5 border-b border-gray-200 pb-4 mb-4">
         <h2 className="text-2xl font-bold tracking-tight">
           Sign Up{" "}
@@ -266,7 +266,12 @@ export default function SignupForm() {
         <small className="text-rose-500">{errors.date?.message}</small>
       </div>
 
-      <Button type="submit">Sign Up</Button>
+      <Button
+        type="submit"
+        disabled={!isDirty || !isValid || isLoading || isSubmitting}
+      >
+        Sign Up
+      </Button>
       <Button onClick={handleGetValue} type="button" className="ml-4">
         Get Value
       </Button>
