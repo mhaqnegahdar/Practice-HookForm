@@ -87,17 +87,20 @@ export default function SignupForm() {
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-0.5 border-b border-gray-200 pb-4 mb-4">
         <h2 className="text-2xl font-bold tracking-tight">
-          Sign Up {renderCount / 2}{" "}
+          Sign Up{" "}
+          {process.env.NODE_ENV === "development" ? renderCount / 2 : ""}{" "}
         </h2>
         <p className="text-muted-foreground">
           Please fill out the form below to sign up.
         </p>
-        <p className="text-muted-foreground">Password : {watchPassword}</p>
+        <p className="text-muted-foreground">
+          Password is watched: {watchPassword}
+        </p>
       </div>
       <div>
         <label
           htmlFor="username"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-primary "
         >
           Username
         </label>
@@ -112,7 +115,7 @@ export default function SignupForm() {
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-primary"
         >
           Email
         </label>
@@ -133,7 +136,7 @@ export default function SignupForm() {
       <div>
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-primary"
         >
           Password
         </label>
@@ -148,7 +151,7 @@ export default function SignupForm() {
       <div>
         <label
           htmlFor="twitter"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-primary"
         >
           Twitter
         </label>
@@ -162,7 +165,7 @@ export default function SignupForm() {
       <div>
         <label
           htmlFor="facebook"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-primary"
         >
           Facebook
         </label>
@@ -178,7 +181,7 @@ export default function SignupForm() {
           <div className="flex items-center justify-between">
             <label
               htmlFor={`phoneNumbers-${index}`}
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-primary"
             >
               {index === 0 ? "Primary " : "Secondary "} Phone Number
             </label>
@@ -226,10 +229,7 @@ export default function SignupForm() {
       ))}
 
       <div>
-        <label
-          htmlFor="age"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="age" className="block text-sm font-medium text-primary">
           Age
         </label>
         <input
@@ -247,7 +247,7 @@ export default function SignupForm() {
       <div>
         <label
           htmlFor="date"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-primary"
         >
           Date
         </label>

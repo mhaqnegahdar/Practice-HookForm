@@ -2,7 +2,7 @@
 
 This is a practical [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) for practicing **React-Hook-Form** and **Zop** libraries.
 
-Explore the [demo](https://practice-reacthookform.vercel.app/) for better understanding'.
+Explore the [demo](https://practice-hook-form.vercel.app/) for better understanding'.
 
 ## Technologies
 
