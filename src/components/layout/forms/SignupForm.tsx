@@ -2,7 +2,7 @@
 
 //Hooks / Packages
 import React from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { FieldErrors, useFieldArray, useForm } from "react-hook-form";
 
 // Components
 import { Button } from "@/components/ui/button";
@@ -66,6 +66,9 @@ export default function SignupForm() {
   const onSubmit = (data: SignupFormType) => {
     console.log("Submit: ", data);
   };
+  const onError = (error:FieldErrors<SignupFormType>) => {
+    console.log("Erros: ", error);
+  };
 
   const handleGetValue = () => {
     console.log("Get Value: ", getValues("username"));
@@ -84,7 +87,7 @@ export default function SignupForm() {
   renderCount++;
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <form className="space-y-4" onSubmit={handleSubmit(onSubmit,onError)}>
       <div className="space-y-0.5 border-b border-gray-200 pb-4 mb-4">
         <h2 className="text-2xl font-bold tracking-tight">
           Sign Up{" "}
