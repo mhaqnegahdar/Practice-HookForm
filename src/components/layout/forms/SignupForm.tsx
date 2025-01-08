@@ -31,7 +31,7 @@ export default function SignupForm() {
     defaultValues: async () => {
       // await new Promise((resolve) => setTimeout(resolve, 3000));
       return {
-        username: "mhaqnegahdar",
+        username: "testusername",
         email: "",
         password: "",
         socialMedia: {
