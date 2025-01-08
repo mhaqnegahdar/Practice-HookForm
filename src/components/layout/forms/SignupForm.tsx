@@ -57,7 +57,7 @@ export default function SignupForm() {
     handleSubmit,
     formState: {
       errors,
-      isValid,
+      // isValid,
       isSubmitting,
       isLoading,
       isDirty,
@@ -72,7 +72,8 @@ export default function SignupForm() {
 
   const watchPassword = watch("password");
 
-  const onSubmit = (data: SignupFormType) => {
+  const onSubmit = async (data: SignupFormType) => {
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
     console.log("Submit: ", data);
   };
   const onError = (error: FieldErrors<SignupFormType>) => {
@@ -147,6 +148,13 @@ export default function SignupForm() {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
               message: "Invalid email address",
             },
+            validate: {
+              alreadyExists: async (value) => {
+                const response = await fetch(`https://jsonplaceholder.typicode.com/users?email=${value}`);
+                const data = await response.json();
+                return data.length === 0 || "Email already exists";
+              }
+            }
           })}
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
         />
