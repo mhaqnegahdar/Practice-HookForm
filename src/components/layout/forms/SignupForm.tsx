@@ -3,6 +3,8 @@
 //Hooks / Packages
 import React, { useEffect } from "react";
 import { FieldErrors, useFieldArray, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 // Components
 import { Button } from "@/components/ui/button";
@@ -26,8 +28,43 @@ export default function SignupForm() {
     date: Date;
   };
 
+  // Zod Schema
+  const schema = z.object({
+    username: z.string().min(1, "Username is required"),
+    email: z
+      .string()
+      .email("Invalid email address")
+      .min(1, "Email is required")
+      .refine(
+        async (value) => {
+          const response = await fetch(
+            `https://jsonplaceholder.typicode.com/users?email=${value}`
+          );
+
+          const data = await response.json();
+          return data.length === 0;
+        },
+        {
+          message: "Email is already taken",
+        }
+      ),
+    password: z.string().min(1, "Password is required"),
+    socialMedia: z.object({
+      twitter: z.string(),
+      facebook: z.string(),
+    }),
+    phoneNumbers: z
+      .array(
+        z.object({ number: z.string().min(1, "Phone number is required") })
+      )
+      .min(1, "At least one phone number is required"),
+    age: z.number().int("Age must be an integer").min(1, "Age is required"),
+    date: z.date().min(new Date(1600, 1, 1), "Date is required"),
+  });
+
   // Form
   const form = useForm<SignupFormType>({
+    resolver: zodResolver(schema),
     defaultValues: async () => {
       // await new Promise((resolve) => setTimeout(resolve, 3000));
       return {
@@ -103,6 +140,7 @@ export default function SignupForm() {
     }
   }, [isSubmitSuccessful, reset]);
 
+  console.log(errors.email?.message);
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit, onError)}>
       <div className="space-y-0.5 border-b border-gray-200 pb-4 mb-4">
@@ -127,8 +165,10 @@ export default function SignupForm() {
         <input
           type="text"
           id="username"
-          {...register("username", { required: "Username is required" })}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+          {...register("username")}
+          className={`mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+            errors.username ? "border-rose-500" : "border-gray-300"
+          }`}
         />
         <small className="text-rose-500">{errors.username?.message}</small>
       </div>
@@ -142,23 +182,15 @@ export default function SignupForm() {
         <input
           type="email"
           id="email"
-          {...register("email", {
-            required: "Email is required",
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "Invalid email address",
-            },
-            validate: {
-              alreadyExists: async (value) => {
-                const response = await fetch(`https://jsonplaceholder.typicode.com/users?email=${value}`);
-                const data = await response.json();
-                return data.length === 0 || "Email already exists";
-              }
-            }
-          })}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+          {...register("email")}
+          className={`mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+            errors.email ? "border-rose-500" : "border-gray-300"
+          }`}
         />
-        <small className="text-rose-500">{errors.email?.message}</small>
+
+        {errors.email?.message && (
+          <small className="text-rose-500">{errors.email.message}</small>
+        )}
       </div>
       <div>
         <label
@@ -170,8 +202,10 @@ export default function SignupForm() {
         <input
           type="password"
           id="password"
-          {...register("password", { required: "Password is required" })}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+          {...register("password")}
+          className={`mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+            errors.password ? "border-rose-500" : "border-gray-300"
+          }`}
         />
         <small className="text-rose-500">{errors.password?.message}</small>
       </div>
@@ -186,7 +220,9 @@ export default function SignupForm() {
           type="text"
           id="twitter"
           {...register("socialMedia.twitter")}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+          className={`mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+            errors.socialMedia?.twitter ? "border-rose-500" : "border-gray-300"
+          }`}
         />
       </div>
       <div>
@@ -200,7 +236,9 @@ export default function SignupForm() {
           type="text"
           id="facebook"
           {...register("socialMedia.facebook")}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+          className={`mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+            errors.socialMedia?.facebook ? "border-rose-500" : "border-gray-300"
+          }`}
         />
       </div>
       {phoneNumberArray.fields.map((field, index) => (
@@ -228,14 +266,12 @@ export default function SignupForm() {
             <input
               type="text"
               id={`phoneNumbers-${index}`}
-              {...register(`phoneNumbers.${index}.number`, {
-                required: "Phone number is required",
-                pattern: {
-                  value: /^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$/,
-                  message: "Invalid phone number",
-                },
-              })}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+              {...register(`phoneNumbers.${index}.number`)}
+              className={`mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+                errors.phoneNumbers?.[index]?.number
+                  ? "border-rose-500"
+                  : "border-gray-300"
+              }`}
             />
             {index !== 0 ? (
               <Button
@@ -262,11 +298,10 @@ export default function SignupForm() {
         <input
           type="number"
           id="age"
-          {...register("age", {
-            valueAsNumber: true,
-            required: "Age is required",
-          })}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+          {...register("age", { valueAsNumber: true })}
+          className={`mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+            errors.age ? "border-rose-500" : "border-gray-300"
+          }`}
         />
         <small className="text-rose-500">{errors.age?.message}</small>
       </div>
@@ -281,12 +316,12 @@ export default function SignupForm() {
         <input
           type="date"
           id="date"
-          {...register("date", {
-            valueAsDate: true,
-            required: "Date is required",
-          })}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+          {...register("date", { valueAsDate: true })}
+          className={`mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+            errors.date ? "border-rose-500" : "border-gray-300"
+          }`}
         />
+
         <small className="text-rose-500">{errors.date?.message}</small>
       </div>
 
